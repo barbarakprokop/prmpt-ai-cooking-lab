@@ -1,5 +1,7 @@
 # prmpt. | AI Cooking Lab
 
+![prmpt-ai-cooking-lab interface preview](https://barbarakprokop.com/wp-content/uploads/2026/11/prmpt.webp)
+
 **A conversational cooking app designed and built from interaction model to working iPhone implementation.**
 
 What if making a recipe with AI felt like talking to someone in the kitchen rather than operating a recipe search form?
