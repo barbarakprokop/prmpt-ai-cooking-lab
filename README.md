@@ -23,21 +23,32 @@ The central UX decision is to **let conversation create and change structured re
 
 ## Architecture
 
+A compact overview of the request lifecycle. Black nodes mark the entry and decision points; the three outcomes preserve the difference between creating, changing and asking about a recipe.
+
 ```mermaid
-flowchart TD
-    U[Voice or typed cooking request] --> A[React Native iPhone app]
-    A --> B[Identify intended recipe card and request]
-    B --> C[Supabase Edge Function]
-    C --> D[Validate anonymous session and reserve interaction]
-    D --> E[OpenAI Responses API]
-    E --> F[Parse and validate structured action]
-    F --> G[Settle interaction and return result]
-    G --> H{Response action}
-    H -->|New recipe| I[Create independent recipe card]
-    H -->|Refinement| J[Update captured recipe card]
-    H -->|Question| K[Keep recipe unchanged; show answer]
-    I --> L[Optional local SQLite save]
-    J --> L
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial, Helvetica, sans-serif", "fontSize": "15px", "primaryColor": "#FFFFFF", "primaryTextColor": "#111111", "primaryBorderColor": "#111111", "lineColor": "#555555", "secondaryColor": "#F2F2F2", "tertiaryColor": "#FFFFFF", "clusterBkg": "#FFFFFF", "clusterBorder": "#B5B5B5", "edgeLabelBackground": "#FFFFFF"}}}%%
+flowchart TB
+    INPUT["01 / VOICE OR TEXT"] --> APP["iPHONE APP<br/>Capture request and recipe card"]
+    APP --> API["02 / SUPABASE<br/>Authenticate and reserve interaction"]
+    API --> MODEL["03 / OPENAI<br/>Generate structured response"]
+    MODEL --> CHECK["04 / VALIDATION<br/>Check action and settle request"]
+    CHECK --> ROUTE{"05 / RESPONSE TYPE"}
+    ROUTE -->|CREATE| NEW["NEW RECIPE<br/>Create independent card"]
+    ROUTE -->|REFINE| EDIT["REFINEMENT<br/>Update captured card"]
+    ROUTE -->|ASK| ASK["QUESTION<br/>Keep card unchanged"]
+    NEW --> SAVE[("OPTIONAL / SQLITE SAVE")]
+    EDIT --> SAVE
+
+    classDef ink fill:#111111,stroke:#111111,color:#FFFFFF,stroke-width:2px;
+    classDef outline fill:#FFFFFF,stroke:#111111,color:#111111,stroke-width:1.6px;
+    classDef light fill:#F0F0F0,stroke:#888888,color:#111111,stroke-width:1.3px;
+    classDef result fill:#FFFFFF,stroke:#111111,color:#111111,stroke-width:1.5px;
+    classDef storage fill:#E8E8E8,stroke:#666666,color:#111111,stroke-width:1px;
+    class INPUT,ROUTE ink;
+    class APP,API,MODEL,CHECK outline;
+    class NEW,EDIT,ASK result;
+    class SAVE storage;
+    linkStyle default stroke:#555555,stroke-width:1.5px;
 ```
 
 This describes the observed design in the private code snapshot. It is **not a deployable reference implementation**; the actual authentication, API integration, payment handling and database migrations stay private.
