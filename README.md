@@ -28,29 +28,28 @@ The central UX decision is to **let conversation create and change structured re
 A compact overview of the request lifecycle. Black nodes mark the entry and decision points; the three outcomes preserve the difference between creating, changing and asking about a recipe.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial, Helvetica, sans-serif", "fontSize": "15px", "primaryColor": "#FFFFFF", "primaryTextColor": "#111111", "primaryBorderColor": "#111111", "lineColor": "#555555", "secondaryColor": "#F2F2F2", "tertiaryColor": "#FFFFFF", "clusterBkg": "#FFFFFF", "clusterBorder": "#B5B5B5", "edgeLabelBackground": "#FFFFFF"}}}%%
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial, Helvetica, sans-serif","fontSize":"15px","primaryColor":"#FF555A","primaryTextColor":"#FFFFFF","primaryBorderColor":"#FF555A","lineColor":"#858585","secondaryColor":"#858585","tertiaryColor":"#F0F0F0","edgeLabelBackground":"#FFFFFF"}}}%%
 flowchart TB
-    INPUT["01 / VOICE OR TEXT"] --> APP["iPHONE APP<br/>Capture request and recipe card"]
-    APP --> API["02 / SUPABASE<br/>Authenticate and reserve interaction"]
-    API --> MODEL["03 / OPENAI<br/>Generate structured response"]
-    MODEL --> CHECK["04 / VALIDATION<br/>Check action and settle request"]
+    INPUT("01 / VOICE OR TEXT") --> APP("iPHONE APP<br/>Capture request and recipe card")
+    APP --> API("02 / SUPABASE<br/>Authenticate and reserve interaction")
+    API --> MODEL("03 / OPENAI<br/>Generate structured response")
+    MODEL --> CHECK("04 / VALIDATION<br/>Check action and settle request")
     CHECK --> ROUTE{"05 / RESPONSE TYPE"}
-    ROUTE -->|CREATE| NEW["NEW RECIPE<br/>Create independent card"]
-    ROUTE -->|REFINE| EDIT["REFINEMENT<br/>Update captured card"]
-    ROUTE -->|ASK| ASK["QUESTION<br/>Keep card unchanged"]
+    ROUTE -->|CREATE| NEW("NEW RECIPE<br/>Create independent card")
+    ROUTE -->|REFINE| EDIT("REFINEMENT<br/>Update captured card")
+    ROUTE -->|ASK| ASK("QUESTION<br/>Keep card unchanged")
     NEW --> SAVE[("OPTIONAL / SQLITE SAVE")]
     EDIT --> SAVE
 
-    classDef ink fill:#111111,stroke:#111111,color:#FFFFFF,stroke-width:2px;
-    classDef outline fill:#FFFFFF,stroke:#111111,color:#111111,stroke-width:1.6px;
-    classDef light fill:#F0F0F0,stroke:#888888,color:#111111,stroke-width:1.3px;
-    classDef result fill:#FFFFFF,stroke:#111111,color:#111111,stroke-width:1.5px;
-    classDef storage fill:#E8E8E8,stroke:#666666,color:#111111,stroke-width:1px;
-    class INPUT,ROUTE ink;
-    class APP,API,MODEL,CHECK outline;
-    class NEW,EDIT,ASK result;
-    class SAVE storage;
-    linkStyle default stroke:#555555,stroke-width:1.5px;
+    classDef primary fill:#FF555A,stroke:#FF555A,color:#FFFFFF,stroke-width:1.5px;
+    classDef secondary fill:#858585,stroke:#858585,color:#FFFFFF,stroke-width:1.2px;
+    classDef annotation fill:#F0F0F0,stroke:#C7C7C7,color:#111111,stroke-width:1px;
+    classDef future fill:#F0F0F0,stroke:#999999,color:#555555,stroke-width:1.2px,stroke-dasharray:5 4;
+    class INPUT,ROUTE primary;
+    class APP,API,MODEL,CHECK secondary;
+    class NEW,EDIT,ASK secondary;
+    class SAVE annotation;
+    linkStyle default stroke:#858585,stroke-width:1.5px;
 ```
 
 This describes the observed design in the private code snapshot. It is **not a deployable reference implementation**; the actual authentication, API integration, payment handling and database migrations stay private.
