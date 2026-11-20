@@ -1,0 +1,20 @@
+{
+  "synthetic": true,
+  "examples": [
+    {
+      "user": "I have chickpeas, spinach and lemon. What can I cook?",
+      "expectedAction": "new_recipe",
+      "effect": "Create a new independent recipe card"
+    },
+    {
+      "user": "Make that recipe spicy, but without peanuts.",
+      "expectedAction": "refinement",
+      "effect": "Update only the captured active recipe card"
+    },
+    {
+      "user": "Can I make this the night before?",
+      "expectedAction": "question",
+      "effect": "Answer without changing recipe ingredients or steps"
+    }
+  ]
+}
